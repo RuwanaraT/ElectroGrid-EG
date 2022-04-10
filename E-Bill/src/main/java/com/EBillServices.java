@@ -18,15 +18,7 @@ import model.EBill;
 public class EBillServices {
 	
 	EBill ebill = new EBill();
-	
-	@GET
-	@Path("/") 
-	@Produces(MediaType.TEXT_HTML) 
-	public String readItems() 
-	 { 
-	 return "Hello ElectroGrid"; 
-	 }
-	
+		
 	@POST
 	@Path("/") 
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
@@ -36,6 +28,14 @@ public class EBillServices {
 	 String output = ebill.createEBill(eaNumber, cusName, address, billingDate, tType, dDates, conn,  amount); 
 	return output; 
 	
+	}
+	
+	@GET
+	@Path("/") 
+	@Produces(MediaType.TEXT_HTML) 
+	public String DisplayEBill() 
+	 { 
+	 return ebill.DisplayEBill(); 
 	}
 
 
