@@ -13,7 +13,7 @@ public class EBill {
 	dbconnect dbconn = new dbconnect();
 	
 	// Insert Operation
-	public String createEBill(int eaNumber, String cusName, String address, String billingDate, String tType, String dDates, String conn, double amount) { 
+	public String createEBill(String eaNumber, String cusName, String address, String billingDate, String amount) { 
 		
 	 String output = ""; 
 	 try
@@ -27,19 +27,18 @@ public class EBill {
 	} 
 	 
 	 // create a prepared statement
-	 String query = " insert into ebill (`billID`,`eaNumber`,`cusName`,`address`,`billingDate`, `tType`, `dDates`, `conn`, `amount`)" + " values (?, ?, ?, ?, ?, ?, ?, ?, ?)"; 
+	 String query = " INSERT INTO ebill (`billID`,`eaNumber`,`cusName`,`address`,`billingDate`,`amount`)" + " VALUES (?, ?, ?, ?, ?, ?)"; 
 	 PreparedStatement preparedStmt = con.prepareStatement(query); 
 	 
 	 // binding values
 	 preparedStmt.setInt(1, 0); 
-	 preparedStmt.setInt(2, eaNumber); 
+	 //preparedStmt.setInt(2, eaNumber); 
+	 preparedStmt.setInt(2, Integer.parseInt(eaNumber));
 	 preparedStmt.setString(3, cusName); 
 	 preparedStmt.setString(4, address); 
 	 preparedStmt.setString(5, billingDate); 
-	 preparedStmt.setString(6, tType); 
-	 preparedStmt.setString(7, dDates); 
-	 preparedStmt.setString(8, conn); 
-	 preparedStmt.setDouble(9, amount);
+	 //preparedStmt.setDouble(9, amount);
+	 preparedStmt.setDouble(6, Double.parseDouble(amount));
 	 
 	 // execute the statement
 	 preparedStmt.execute(); 
@@ -66,8 +65,10 @@ public class EBill {
 	 String output = ""; 
 	 
 	 try{ 
-		 
+		
+	// create connection object & call the connection method
 	 Connection con = dbconn.connect(); 
+	 
 	 if (con == null) {
 		 return "Error while connecting to the database for display e-bill."; 
 	 } 
@@ -123,6 +124,50 @@ public class EBill {
 	 } 
 	 return output; 
 	 
+	 }
+	
+	// Update Operation
+	public String updateEBill(String billID, String eaNumber, String cusName, String address, String billingDate, String amount) {
+		
+	 String output = ""; 
+	 
+	 try { 
+		 
+	 // create connection object & call the connection method	 
+	 Connection con = dbconn.connect(); 
+	 
+	 if (con == null) {
+		 return "Error while connecting to the database for updating e-bill."; 
 	 } 
+	 
+	 // create a prepared statement
+	 String query = "UPDATE ebill SET eaNumber=?,cusName=?,address=?,billingDate=?, amount=? WHERE billID=?"; 
+	 PreparedStatement preparedStmt = con.prepareStatement(query); 
+	 
+	 // binding values
+	 preparedStmt.setInt(1, Integer.parseInt(eaNumber)); 
+	 preparedStmt.setString(2, cusName);
+	 preparedStmt.setString(3, address);
+	 preparedStmt.setString(4, billingDate); 
+	 preparedStmt.setDouble(5, Double.parseDouble(amount)); 
+	 preparedStmt.setInt(6, Integer.parseInt(billID)); 
 
+	 // execute the statement
+	 preparedStmt.execute(); 
+	 
+	 // close the connection
+	 con.close(); 
+	 
+	 output = "E-Bill Updated successfully"; 
+	 } 
+	 
+	 catch (Exception e) { 
+	 output = "Error while Updating the E-Bill."; 
+	 System.err.println(e.getMessage()); 
+	 
+	 } 
+	 
+	 return output; 
+	 
+	 }
 }

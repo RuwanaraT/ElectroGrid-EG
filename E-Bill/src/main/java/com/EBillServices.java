@@ -23,9 +23,9 @@ public class EBillServices {
 	@Path("/") 
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
 	@Produces(MediaType.TEXT_PLAIN) 
-	public String createEBill(@FormParam("eaNumber") int eaNumber, @FormParam("cusName") String cusName, @FormParam("address") String address, @FormParam("billingDate") String billingDate, @FormParam("tType") String tType, @FormParam("dDates") String dDates, @FormParam("conn") String conn, @FormParam("amount") double amount) { 
+	public String createEBill(@FormParam("eaNumber") String eaNumber, @FormParam("cusName") String cusName, @FormParam("address") String address, @FormParam("billingDate") String billingDate, @FormParam("amount") String amount) { 
 		
-	 String output = ebill.createEBill(eaNumber, cusName, address, billingDate, tType, dDates, conn,  amount); 
+	 String output = ebill.createEBill(eaNumber, cusName, address, billingDate, amount); 
 	return output; 
 	
 	}
@@ -36,6 +36,27 @@ public class EBillServices {
 	public String DisplayEBill() 
 	 { 
 	 return ebill.DisplayEBill(); 
+	}
+	
+	@PUT
+	@Path("/") 
+	@Consumes(MediaType.APPLICATION_JSON) 
+	@Produces(MediaType.TEXT_PLAIN) 
+	public String updateEBill(String ebillData) { 
+	//Convert the input string to a JSON object 
+	 JsonObject ebillObject = new JsonParser().parse(ebillData).getAsJsonObject(); 
+	 
+	//Read the values from the JSON object
+	 String billID = ebillObject.get("billID").getAsString(); 
+	 String eaNumber = ebillObject.get("eaNumber").getAsString(); 
+	 String cusName = ebillObject.get("cusName").getAsString(); 
+	 String address = ebillObject.get("address").getAsString(); 
+	 String billingDate = ebillObject.get("billingDate").getAsString(); 
+	 String amount = ebillObject.get("amount").getAsString(); 
+	 
+	 String output = ebill.updateEBill(billID, eaNumber, cusName, address, billingDate, amount); 
+	 
+	return output; 
 	}
 
 
