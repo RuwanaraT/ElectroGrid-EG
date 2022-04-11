@@ -76,7 +76,7 @@ public class EBill {
 	 // prepare the e-bill to be displayed
 	 output = "<center><table border='1' width='100%'><tr><th colspan='2'>Statement of Electricity Account</th>"; 
 	 
-	 String query = "select * from ebill"; 
+	 String query = "SELECT * FROM ebill"; 
 	 Statement stmt = con.createStatement(); 
 	 ResultSet rs = stmt.executeQuery(query); 
 	 
@@ -163,6 +163,44 @@ public class EBill {
 	 
 	 catch (Exception e) { 
 	 output = "Error while Updating the E-Bill."; 
+	 System.err.println(e.getMessage()); 
+	 
+	 } 
+	 
+	 return output; 
+	 
+	 }
+	
+	// Delete Operation
+	public String deleteEBill(String billID) { 
+		
+	 String output = ""; 
+	 try { 
+	 // create connection object & call the connection method
+	 Connection con = dbconn.connect();
+	 
+	 if (con == null) {
+		 return "Error while connecting to the database for deleting e-bill."; 
+	 } 
+	 
+	 // create a prepared statement
+	 String query = "DELETE from ebill WHERE billID=?"; 
+	 PreparedStatement preparedStmt = con.prepareStatement(query); 
+	 
+	 // binding values
+	 preparedStmt.setInt(1, Integer.parseInt(billID));
+	 
+	 // execute the statement
+	 preparedStmt.execute(); 
+	 
+	 // close the connection
+	 con.close(); 
+	 
+	 output = "E-Bill Deleted successfully"; 
+	 
+	 } 
+	 catch (Exception e) { 
+	 output = "Error while Deleting the E-Bill."; 
 	 System.err.println(e.getMessage()); 
 	 
 	 } 
