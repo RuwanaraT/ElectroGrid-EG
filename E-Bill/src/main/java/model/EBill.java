@@ -59,7 +59,7 @@ public class EBill {
 	 
 	 }
 	
-	// Retrieve Operation
+	// Retrieve Operation for Display all the Bills
 	public String DisplayEBills() {
 		
 	 String output = ""; 
@@ -126,7 +126,7 @@ public class EBill {
 	 
 	 }
 	
-	// Retrieve Operation
+	// Retrieve Operation for Display Single Bill
 	public String DisplayEBill(String billID) {
 		
 	 String output = ""; 
