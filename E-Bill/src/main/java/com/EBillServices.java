@@ -33,9 +33,17 @@ public class EBillServices {
 	@GET
 	@Path("/") 
 	@Produces(MediaType.TEXT_HTML) 
-	public String DisplayEBill() 
+	public String DisplayEBills() 
 	 { 
-	 return ebill.DisplayEBill(); 
+	 return ebill.DisplayEBills(); 
+	}
+	
+	@GET
+	@Path("/{id}") 
+	@Produces(MediaType.TEXT_HTML) 
+	public String DisplayEBill(@PathParam("id") String billID) 
+	 { 
+	 return ebill.DisplayEBill(billID); 
 	}
 	
 	@PUT
@@ -63,8 +71,8 @@ public class EBillServices {
 	@Path("/") 
 	@Consumes(MediaType.APPLICATION_XML) 
 	@Produces(MediaType.TEXT_PLAIN) 
-	public String deleteItem(String ebillData) 
-	{ 
+	public String deleteItem(String ebillData) {
+		
 	//Convert the input string to an XML document
 	 Document doc = Jsoup.parse(ebillData, "", Parser.xmlParser()); 
 	 
