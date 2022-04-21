@@ -1,5 +1,6 @@
 package util;
 
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -20,4 +21,8 @@ public class dbconnect {
 	 
 	 return con; 
 	}
+
+public class dbconnect {
+
+
 }

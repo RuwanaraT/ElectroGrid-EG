@@ -1,4 +1,5 @@
 package com;
+
 //For REST Service
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -85,4 +86,9 @@ public class DeviceServices {
 		 String output = deviceObject.UpdateDevice(deviceID,device,powerUsage,hours,noOfdevices);
 		 return output;
 		}
+
+
+public class DeviceServices {
+
+
 }
