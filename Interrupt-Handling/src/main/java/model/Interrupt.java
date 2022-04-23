@@ -6,7 +6,7 @@ public class Interrupt
 { //A common method to connect to the DB
 	dbconnect dbconn = new dbconnect();
 	
-	public String insertInterrupt(String code, String date, String duration, String start, String end, String region, String reason)
+	public String insertInterrupt(String code, String date, String duration, String start, String end, String region, String reason, String adminID)
 	 {
 		 String output = "";
 		 try
@@ -15,8 +15,8 @@ public class Interrupt
 			 if (con == null)
 			 {return "Error while connecting to the database for inserting."; }
 			 // create a prepared statement
-			 String query = " insert into interrupt (`interruptID`,`interruptCode`,`Date`,`Duration`,`Start_time`,`End_time`,`Region`,`Reason`)"
-			 + " values (?, ?, ?, ?, ?, ?, ?, ?)";
+			 String query = " insert into interrupt (`interruptID`,`interruptCode`,`Date`,`Duration`,`Start_time`,`End_time`,`Region`,`Reason`,`AdminID`)"
+			 + " values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			 PreparedStatement preparedStmt = con.prepareStatement(query);
 			 // binding values
 			 preparedStmt.setInt(1, 0);
@@ -27,6 +27,7 @@ public class Interrupt
 			 preparedStmt.setString(6, end);
 			 preparedStmt.setString(7, region);
 			 preparedStmt.setString(8, reason);
+			 preparedStmt.setString(9, adminID);
 			 // execute the statement
 			 preparedStmt.execute();
 			 con.close();
@@ -34,7 +35,7 @@ public class Interrupt
 	 }
 	 catch (Exception e)
 	 {
-		 output = "Error while inserting the item.";
+		 output = "Error while inserting.";
 		 System.err.println(e.getMessage());
 	 }
 	 return output;
@@ -80,10 +81,7 @@ public class Interrupt
 			 output += "<td>" + Reason + "</td>";
 			 // buttons
 			 output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>"
-			 + "<td><form method='post' action='items.jsp'>" 
-			 + "<input name='btnRemove' type='submit' value='Remove' class='btn btn-danger'>"
-			 + "<input name='itemID' type='hidden' value='" + interruptID
-			 + "'>" + "</form></td></tr>";
+			 +"<td><input name='btnUpdate' type='button' value='Delete' class='btn btn-secondary'></td>";
 			 }
 			 con.close();
 			 // Complete the html table
@@ -91,13 +89,13 @@ public class Interrupt
 		 }
 		 catch (Exception e)
 		 {
-		 output = "Error while reading the items.";
+		 output = "Error while reading the interrupt notice.";
 		 System.err.println(e.getMessage());
 		 }
 		 return output;
 	 }
 	
-	public String DisplayInterrupt(String interruptID) {
+	public String DisplayInterrupt(String Region) {
 		
 		 String output = ""; 
 		 
@@ -107,62 +105,67 @@ public class Interrupt
 			 if (con == null)
 			 {return "Error while connecting to the database for reading single interrupt."; }
 		 
-		 // prepare the e-bill to be displayed
-		 output = "<center><table border='1' width='100%'><tr><th colspan='2'>Interrupt</th>"; 
+			 output = "<table border='1'><tr><th>Interrupt Code</th><th>Date</th>" +
+					 "<th>Duration</th>" +
+					 "<th>Start time</th>" +
+					 "<th>End time</th>" +
+					 "<th>Region</th>" +
+					 "<th>Reason</th>" +
+					 "<th>Update</th><th>Remove</th></tr>";
 		 
-		 String query = "SELECT * FROM interrupt WHERE interruptID=?"; 
+		 String query = "SELECT interruptCode, Date, Duration, Start_time, End_time, Region, Reason FROM interrupt WHERE Region=?"; 
 
 		// create a prepared statement
 		 PreparedStatement preparedStmt = con.prepareStatement(query); 
 		 
 		 // binding values
-		 preparedStmt.setInt(1, Integer.parseInt(interruptID));
+		 preparedStmt.setString(1,Region);
 		 
 		 // execute the statement
 		 ResultSet rs = preparedStmt.executeQuery(); 
 		 
 		 // iterate through the rows in the result set
 		 while (rs.next()) 
-		 { 
+		 { 		
+			 
 			 String interruptCode = rs.getString("interruptCode");
 			 String Date = rs.getString("Date");
 			 String Duration = Double.toString(rs.getDouble("Duration"));
 			 String Start_time = rs.getString("Start_time");
 			 String End_time = rs.getString("End_time");
-			 String Region = rs.getString("Region");
 			 String Reason = rs.getString("Reason");
-		 
-		 // display body of the e-bill
-		 output += "<tr> <td> Interrupt Code </td> <td>" + interruptCode + "</td> </tr>"; 
-		 output += "<tr> <td> Date </td> <td>" + Date + "</td> </tr>"; 
-		 output += "<tr> <td> Duration </td> <td>" + Duration + "</td> </tr>"; 
-		 output += "<tr> <td> Start time </td> <td>" + Start_time + "</td> </tr>";
-		 output += "<tr> <td> End time </td> <td>" + End_time + "</td> </tr>";
-		 output += "<tr> <td> Region </td> <td>" + Region + "</td> </tr>";
-		 output += "<tr> <td> Reason </td> <td>" + Reason + "</td> </tr>";
+			 // Add into the html table
+			 output += "<tr><td>" + interruptCode + "</td>";
+			 output += "<td>" + Date + "</td>";
+			 output += "<td>" + Duration + "</td>";
+			 output += "<td>" + Start_time + "</td>";
+			 output += "<td>" + End_time + "</td>";
+			 output += "<td>" + Region + "</td>";
+			 output += "<td>" + Reason + "</td>"; 
+		
 		 
 		 // buttons
-		 output += "<tr> <td colspan='2'><center><br/><input name='update' type='button' value='Update'> <br/><br/>"
-		 + "<form method='post' action='#'>"
-		 + "<input name='remove' type='submit' value='Remove'>"
-		 + "<input name='itemID' type='hidden' value='" + interruptID 
-		 + "'>" + "</form></center></td> </tr>"; 
-		 } 
+			 output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>"
+					 +"<td><input name='btnUpdate' type='button' value='Delete' class='btn btn-secondary'></td>";
+					 }
+		 
 		 
 		 con.close(); 
 		 
 		 // close the e-bill
-		 output += "</table> <br/> ***</center>"; 
+		 output += "</table> <br/></center>"; 
 		 
 		 } catch (Exception e) { 
 			 
-		 output = "Error while Displaying single interrupt."; 
+		 output = "Error while Displaying interrupt based on region."; 
 		 System.err.println(e.getMessage()); 
 		 
 		 } 
 		 return output; 
 		 
 		 }
+	
+	
 	
 	public String updateInterrupt(String ID, String code, String date, String duration, String start, String end, String region, String reason)
 	{
@@ -191,7 +194,7 @@ public class Interrupt
 			 }
 			 catch (Exception e)
 			 {
-			 output = "Error while updating the item.";
+			 output = "Error while updating the interrupt notice.";
 			 System.err.println(e.getMessage());
 			 }
 			 return output;
@@ -216,7 +219,7 @@ public class Interrupt
 			 }
 			 catch (Exception e)
 			 {
-			 output = "Error while deleting the item.";
+			 output = "Error while deleting the interrupt notice.";
 			 System.err.println(e.getMessage());
 			 }
 			 return output;

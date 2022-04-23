@@ -23,11 +23,11 @@ public class InterruptService
 	 }
 	 
 	 @GET
-		@Path("/{id}") 
+		@Path("/{Region}") 
 		@Produces(MediaType.TEXT_HTML) 
-		public String DisplayInterrupt(@PathParam("id") String interruptID) 
+		public String DisplayInterrupt(@PathParam("Region") String Region) 
 		 { 
-		 return interruptObj.DisplayInterrupt(interruptID); 
+		 	return interruptObj.DisplayInterrupt(Region); 
 		}
 	 
 	 @POST
@@ -40,9 +40,10 @@ public class InterruptService
 		  @FormParam("Start_time") String Start_time,
 	 		@FormParam("End_time") String End_time,
 	 		@FormParam("Region") String Region,
-	 		@FormParam("Reason") String Reason)
+	 		@FormParam("Reason") String Reason,
+	 		@FormParam("AdminID") String AdminID)
 		 {
-		  String output = interruptObj.insertInterrupt(interruptCode, Date, Duration, Start_time, End_time, Region, Reason);
+		  String output = interruptObj.insertInterrupt(interruptCode, Date, Duration, Start_time, End_time, Region, Reason,AdminID);
 		  return output;
 	 }
 	 
