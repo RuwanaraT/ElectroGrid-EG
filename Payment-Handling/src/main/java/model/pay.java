@@ -13,7 +13,7 @@ public class pay {
 	DBconnect dbcon = new DBconnect();
 
 	// implementing insert payment
-	public String createPayBill(String acntNumber, String payAmount, String cardNumber, String expiry, String CVC) {
+	public String createPayBill(String acntNumber, String billID, String payAmount, String cardNumber, String expiry, String CVC) {
 
 		String output = "";
 		try {
@@ -26,18 +26,19 @@ public class pay {
 			}
 
 			// create a prepared statement
-			String query = " INSERT INTO pay (`paymentID`,`acntNumber`,`payAmount`,`cardNumber`,`expiry`,`CVC`,`date`)"
-					+ " VALUES (?, ?, ?, ?, ?, ?,?)";
+			String query = " INSERT INTO pay (`paymentID`,`acntNumber`,`billID`,`payAmount`,`cardNumber`,`expiry`,`CVC`,`date`)"
+					+ " VALUES (?, ?, ?, ?, ?, ?, ? , ? )";
 			PreparedStatement preparedStmt = con.prepareStatement(query);
 
 			// binding values
 			preparedStmt.setInt(1, 0);
 			preparedStmt.setInt(2, Integer.parseInt(acntNumber));
-			preparedStmt.setDouble(3, Double.parseDouble(payAmount));
-			preparedStmt.setInt(4, Integer.parseInt(cardNumber));
-			preparedStmt.setString(5, expiry);
-			preparedStmt.setInt(6, Integer.parseInt(CVC));
-			preparedStmt.setTimestamp(7, null);
+			preparedStmt.setInt(3, Integer.parseInt(billID));
+			preparedStmt.setDouble(4, Double.parseDouble(payAmount));
+			preparedStmt.setInt(5, Integer.parseInt(cardNumber));
+			preparedStmt.setString(6, expiry);
+			preparedStmt.setInt(7, Integer.parseInt(CVC));
+			preparedStmt.setTimestamp(8, null);
 
 			// execute the statement
 			preparedStmt.execute();
@@ -117,7 +118,7 @@ public class pay {
 
 			// prepare the payment to be displayed
 			output = "<center><table border='1' width='100%'><tr><th colspan='8'>Transaction History</th></tr><tr><td>Payment ID</td>"
-					+ "<td>Account Number</td><td>Payment Amount</td><td>Card Number</td><td>Expiry Date</td>"
+					+ "<td>Account Number</td><td>Bill ID</td><td>Payment Amount</td><td>Card Number</td><td>Expiry Date</td>"
 					+ "<td>CVC</td><td>Payment Done On</td></tr>";
 
 			String query = "SELECT * FROM pay";
@@ -128,6 +129,7 @@ public class pay {
 			while (rset.next()) {
 				String paymentID = Integer.toString(rset.getInt("paymentID"));
 				String acntNumber = Integer.toString(rset.getInt("acntNumber"));
+				String billID = Integer.toString(rset.getInt("billID"));
 				String payAmount = Double.toString(rset.getDouble("payAmount"));
 				String cardNumber = Integer.toString(rset.getInt("cardNumber"));
 				String expiry = rset.getString("expiry");
@@ -135,7 +137,7 @@ public class pay {
 				String date = rset.getString("date");
 
 				// display payments in a tabular manner
-				output += "<tr> <td> " + paymentID + "</td><td>" + acntNumber + "</td><td>" + payAmount + "</td><td>"
+				output += "<tr> <td> " + paymentID + "</td><td>" + acntNumber + "</td><td>" + billID + "</td><td>" + payAmount + "</td><td>"
 						+ cardNumber + "</td><td>" + expiry + "</td><td>" + CVC + "</td><td>" + date + "</td></tr>";
 
 			}
@@ -170,9 +172,9 @@ public class pay {
 
 			// prepare the payment to display
 			output = "<center><table border='1' width='100%'><tr><th colspan='8'>My Payments</th>"
-					+ "<tr><td>Account Number</td><td>Pay Amount</td><td>Payment Done On</td>";
+					+ "<tr><td>Account Number</td><td>Bill ID</td><td>Pay Amount</td><td>Payment Done On</td>";
 
-			String query = "SELECT acntNumber,payAmount,date FROM pay WHERE acntNumber=?";
+			String query = "SELECT acntNumber, billID , payAmount,date FROM pay WHERE acntNumber=?";
 
 			// create a prepared statement
 			PreparedStatement preparedStmt = con.prepareStatement(query);
@@ -187,11 +189,12 @@ public class pay {
 			while (rs.next()) {
 
 				String acNumber = Integer.toString(rs.getInt("acntNumber"));
+				String billID = Integer.toString(rs.getInt("billID"));
 				String payAmount = Double.toString(rs.getDouble("payAmount"));
 				String date = rs.getString("date");
 
 				// show details in a tabular manner
-				output += "<tr> <td> " + acNumber + "</td><td>" + payAmount + "</td><td>" + date + "</td></tr>";
+				output += "<tr> <td> " + acNumber + "</td><td>" + billID + "</td><td>" + payAmount + "</td><td>" + date + "</td></tr>";
 
 			}
 
