@@ -22,11 +22,11 @@ public class paymentServices {
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String createPayBill(@FormParam("acntNumber") String acntNumber, @FormParam("payAmount") String payAmount,
+	public String createPayBill(@FormParam("acntNumber") String acntNumber, @FormParam("billID") String billID, @FormParam("payAmount") String payAmount,
 			@FormParam("cardNumber") String cardNumber, @FormParam("expiry") String expiry,
 			@FormParam("CVC") String CVC) {
 
-		String output = paybill.createPayBill(acntNumber, payAmount, cardNumber, expiry, CVC);
+		String output = paybill.createPayBill(acntNumber, billID ,payAmount, cardNumber, expiry, CVC);
 		return output;
 
 	}
