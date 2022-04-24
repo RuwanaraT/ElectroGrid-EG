@@ -3,10 +3,11 @@ import java.sql.*;
 
 import util.dbconnect;
 public class Complaint
-{ //A common method to connect to the DB
+{ //Common database connection
 	dbconnect dbconn = new dbconnect();
 	
-	public String insertComplaint(String num, String telNo, String type, String detail, String date, String status)
+	//Insert Complaint method
+	public String insertComplaint(String num, String telNo, String type, String detail, String date)
 	 {
 		 String output = "";
 		 try
@@ -15,8 +16,8 @@ public class Complaint
 			 if (con == null)
 			 {return "Error while connecting to the database for inserting."; }
 			 // create a prepared statement
-			 String query = " insert into items_backup (`ComplaintID`,`accountNumber`,`ContactNo`,`ComplaintType`,`Details`,`Date`,`Status`)"
-			 + " values (?, ?, ?, ?, ?, ?, ?)";
+			 String query = " insert into complaints (`ComplaintID`,`accountNumber`,`ContactNo`,`ComplaintType`,`Details`,`Date`)"
+			 + " values (?, ?, ?, ?, ?, ?)";
 			 PreparedStatement preparedStmt = con.prepareStatement(query);
 			 // binding values
 			 preparedStmt.setInt(1, 0);
@@ -25,7 +26,6 @@ public class Complaint
 			 preparedStmt.setString(4, type);
 			 preparedStmt.setString(5, detail);
 			 preparedStmt.setString(6, date);
-			 preparedStmt.setString(7, status);
 			 
 			 // execute the statement
 			 preparedStmt.execute();
@@ -39,6 +39,8 @@ public class Complaint
 	 }
 	 return output;
 	 }
+	
+	//Method to display all complaints
 	public String displayAllComplaint()
 	 {
 		 String output = "";
@@ -47,7 +49,7 @@ public class Complaint
 			 Connection con = dbconn.connect(); 
 			 if (con == null)
 			 {return "Error while connecting to the database for reading."; }
-			 // Prepare the html table to be displayed
+			 // Creates output html table
 			 output = "<table border='1'><tr><th>Account Number</th>" +
 			 "<th>Contact No</th>" + 
 			 "<th>Complaint Type</th>" +
@@ -55,10 +57,10 @@ public class Complaint
 			 "<th>Status</th>" +
 			 "<th>Update</th><th>Remove</th></tr>";
 			
-			 String query = "select * from items_backup";
+			 String query = "select * from complaints";
 			 Statement stmt = con.createStatement();
 			 ResultSet rs = stmt.executeQuery(query);
-			 // iterate through the rows in the result set
+			 // refer all rows in the rs
 			 while (rs.next())
 			 {
 			 String ComplaintID = Integer.toString(rs.getInt("ComplaintID"));
@@ -75,7 +77,7 @@ public class Complaint
 			 output += "<td>" + Details + "</td>";
 			 output += "<td>" + Date + "</td>";
 			 output += "<td>" + Status + "</td>";
-			 // buttons
+			
 			 output += "<td><input name='btnUpdate' type='button' value='Update' class='btn btn-secondary'></td>"
 			 + "<td><form method='post' action='items.jsp'>" 
 			 + "<input name='btnRemove' type='submit' value='Remove' class='btn btn-danger'>"
@@ -94,6 +96,7 @@ public class Complaint
 		 return output;
 	 }
 	
+	//Method to retrieve complaint by passing ID
 	public String DisplayComplaint(String ComplaintID) {
 		
 		 String output = ""; 
@@ -104,10 +107,10 @@ public class Complaint
 			 if (con == null)
 			 {return "Error while connecting to the database for reading single Complaint."; }
 		 
-		 // prepare the e-bill to be displayed
+		 // prepare the complaint to be displayed
 		 output = "<center><table border='1' width='100%'><tr><th colspan='2'>Complaint</th>"; 
 		 
-		 String query = "SELECT * FROM items_backup WHERE ComplaintID=?"; 
+		 String query = "SELECT * FROM complaints WHERE ComplaintID=?"; 
 
 		// create a prepared statement
 		 PreparedStatement preparedStmt = con.prepareStatement(query); 
@@ -128,7 +131,7 @@ public class Complaint
 			 String Date = rs.getString("Date");
 			 String Status = rs.getString("Status");
 			 
-		 // display body of the e-bill
+		 // displaying the complaint in a html table
 		 output += "<tr> <td> Account Number </td> <td>" + accountNumber + "</td> </tr>"; 
 		 output += "<tr> <td> Contact Number </td> <td>" + ContactNo + "</td> </tr>"; 
 		 output += "<tr> <td> Complaint Type </td> <td>" + ComplaintType + "</td> </tr>";
@@ -136,7 +139,7 @@ public class Complaint
 		 output += "<tr> <td> Date </td> <td>" + Date + "</td> </tr>"; 
 		 output += "<tr> <td> Status </td> <td>" + Status + "</td> </tr>";
 		 
-		 // buttons
+		 // update and delete buttons
 		 output += "<tr> <td colspan='2'><center><br/><input name='update' type='button' value='Update'> <br/><br/></td>";
 		 output += "<tr> <td colspan='2'><center><br/><input name='delete' type='button' value='Remove'> <br/><br/></td></tr>";
 		 
@@ -144,11 +147,12 @@ public class Complaint
 		 
 		 con.close(); 
 		 
-		 // close the e-bill
+		 //Clode complaint
 		 output += "</table> <br/> ***</center>"; 
 		 
 		 } catch (Exception e) { 
 			 
+		//Displays error if unable to retrieve
 		 output = "Error while Displaying single Complaint."; 
 		 System.err.println(e.getMessage()); 
 		 
@@ -157,7 +161,8 @@ public class Complaint
 		 
 		 }
 	
-	public String updateComplaint(String ID, String num, String telNo, String type, String detail, String date, String status)
+	//Update complaint method
+	public String updateComplaint(String ID, String num, String telNo, String type, String detail, String status)
 	{
 			 String output = "";
 			 try
@@ -166,16 +171,15 @@ public class Complaint
 				 if (con == null)
 				 {return "Error while connecting to the database for updating."; }
 				 // create a prepared statement
-				 String query = "UPDATE items_backup SET accountNumber=?,ContactNo=?,ComplaintType=?,Details=?,Date=?,Status=? WHERE ComplaintID=?";
+				 String query = "UPDATE complaints SET accountNumber=?,ContactNo=?,ComplaintType=?,Details=?,Status=? WHERE ComplaintID=?";
 				 PreparedStatement preparedStmt = con.prepareStatement(query);
 				 // binding values
 				 preparedStmt.setString(1, num);
 				 preparedStmt.setString(2, telNo);
 				 preparedStmt.setString(3, type);
 				 preparedStmt.setString(4, detail);
-				 preparedStmt.setString(5, date);
-				 preparedStmt.setString(6, status);
-				 preparedStmt.setInt(7, Integer.parseInt(ID));
+				 preparedStmt.setString(5, status);
+				 preparedStmt.setInt(6, Integer.parseInt(ID));
 				 // execute the statement
 				 preparedStmt.execute();
 				 con.close();
@@ -188,6 +192,9 @@ public class Complaint
 			 }
 			 return output;
 		 }
+	
+	
+		//Delete complaint method
 		public String deleteComplaint (String ID)
 		 {
 			 String output = "";
@@ -197,7 +204,7 @@ public class Complaint
 				 if (con == null)
 				 {return "Error while connecting to the database for deleting."; }
 				 // create a prepared statement
-				 String query = "delete from items_backup where ComplaintID=?";
+				 String query = "delete from complaints where ComplaintID=?";
 				 PreparedStatement preparedStmt = con.prepareStatement(query);
 				 // binding values
 				 preparedStmt.setInt(1, Integer.parseInt(ID));

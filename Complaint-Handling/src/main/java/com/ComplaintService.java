@@ -14,6 +14,7 @@ public class ComplaintService
 {
 	Complaint ComplaintObj = new Complaint();
 	 
+	//Retrieve all
 	 @GET
 	 @Path("/")
 	 @Produces(MediaType.TEXT_HTML)
@@ -22,6 +23,7 @@ public class ComplaintService
 		 return ComplaintObj.displayAllComplaint();
 	 }
 	 
+	 //Retrieve by ID
 	 @GET
 		@Path("/{id}") 
 		@Produces(MediaType.TEXT_HTML) 
@@ -30,6 +32,8 @@ public class ComplaintService
 		 return ComplaintObj.DisplayComplaint(ComplaintID); 
 		}
 	 
+	 
+	 //Create new complaint
 	 @POST
 	 @Path("/")
 	 @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -38,13 +42,13 @@ public class ComplaintService
 		  @FormParam("ContactNo") String ContactNo,
 	 		@FormParam("ComplaintType") String ComplaintType,
 	 		@FormParam("Details") String Details,
-	 		@FormParam("Date") String Date,
-	 		 @FormParam("Status") String Status)
+	 		@FormParam("Date") String Date)
 		 {
-		  String output = ComplaintObj.insertComplaint(accountNumber, ContactNo, ComplaintType, Details, Date, Status);
+		  String output = ComplaintObj.insertComplaint(accountNumber, ContactNo, ComplaintType, Details, Date);
 		  return output;
 	 }
 	 
+	 //Update Complaint
 	 @PUT
 	 @Path("/")
 	 @Consumes(MediaType.APPLICATION_JSON)
@@ -59,13 +63,13 @@ public class ComplaintService
 		  String ContactNo = itemObject.get("ContactNo").getAsString();
 		  String ComplaintType = itemObject.get("ComplaintType").getAsString();
 		  String Details = itemObject.get("Details").getAsString();
-		  String Date = itemObject.get("Date").getAsString();
 		  String Status = itemObject.get("Status").getAsString();
 		  
-		  String output = ComplaintObj.updateComplaint(ComplaintID, accountNumber, ContactNo, ComplaintType, Details, Date, Status);
+		  String output = ComplaintObj.updateComplaint(ComplaintID, accountNumber, ContactNo, ComplaintType, Details, Status);
 		 return output;
 	 }
 	 
+	 //Delete Complaint
 	 @DELETE
 	 @Path("/")
 	 @Consumes(MediaType.APPLICATION_XML)
@@ -75,7 +79,7 @@ public class ComplaintService
 		 //Convert the input string to an XML document
 		  Document doc = Jsoup.parse(complaintData, "", Parser.xmlParser());
 	
-		 //Read the value from the element <itemID>
+		 //Read the value from the element <complaintID>
 		  String ComplaintID = doc.select("ComplaintID").text();
 		  String output = ComplaintObj.deleteComplaint(ComplaintID);
 		 return output;

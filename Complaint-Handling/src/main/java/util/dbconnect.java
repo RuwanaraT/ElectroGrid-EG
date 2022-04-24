@@ -15,7 +15,7 @@ public class dbconnect {
 	 Class.forName("com.mysql.cj.jdbc.Driver"); 
 	 
 	 //provide the correct details: DBServer/DBName, UserName, Password 
-	 con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/itemsdb", "root", ""); 
+	 con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/electroGrid", "root", ""); 
 	 
 	 } catch (Exception e) {
 		 e.printStackTrace();
