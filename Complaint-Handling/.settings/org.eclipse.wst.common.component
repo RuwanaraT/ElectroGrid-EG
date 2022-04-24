@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-<<<<<<< Updated upstream
-    <wb-module deploy-name="Interrupt-Handling-0.0.1-SNAPSHOT">
-        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
-        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <property name="context-root" value="Interrupt-Handling"/>
-        <property name="java-output-path" value="/Complaint-Handling/target/classes"/>
-=======
         
     <wb-module deploy-name="Complaint-Handling-0.0.1-SNAPSHOT">
                 
@@ -20,7 +12,6 @@
         <property name="java-output-path" value="/Complaint-Handling/build/classes"/>
         <property name="context-root" value="Complaint-Handling"/>
             
->>>>>>> Stashed changes
     </wb-module>
     
 </project-modules>
